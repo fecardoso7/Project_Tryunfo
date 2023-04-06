@@ -24,10 +24,10 @@ class App extends React.Component {
     this.setState(() => ({
       [name]: value,
 
-    }), this.verifyFields);
+    }), this.hButton);
   };
 
-  verifyFields = () => {
+  hButton = () => {
     const {
       cardName,
       cardDescription,
@@ -52,33 +52,34 @@ class App extends React.Component {
       Number(cardAttr1) + Number(cardAttr2) + Number(cardAttr3) <= totalValue,
     ];
 
-    const formComplete = validation.every((elem) => elem === true);
+    const completeSec = validation.every((item) => item === true);
 
     this.setState({
-      isSaveButtonDisabled: !formComplete,
+      isSaveButtonDisabled: !completeSec,
     });
   };
 
-  onSaveButtonClick = () => {
+  handleClick = (event) => {
+    event.preventDefault();
     const {
       cardName,
       cardDescription,
+      cardImage,
+      cardRare,
       cardAttr1,
       cardAttr2,
       cardAttr3,
-      cardImage,
-      cardRare,
       cardTrunfo,
     } = this.state;
 
-    const newCard = {
+    const novoCard = {
       cardName,
       cardDescription,
+      cardImage,
+      cardRare,
       cardAttr1,
       cardAttr2,
       cardAttr3,
-      cardImage,
-      cardRare,
       cardTrunfo,
     };
 
@@ -90,11 +91,22 @@ class App extends React.Component {
       cardAttr3: '0',
       cardImage: '',
       cardRare: 'normal',
+      hasTrunfo: prevState.hasTrunfo === true ? true : prevState.cardTrunfo,
       cardTrunfo: false,
-      hasTrunfo: prevState.cardTrunfo,
       isSaveButtonDisabled: true,
-      cardSalvo: [...prevState.cardSalvo, newCard],
+      cardSalvo: [...prevState.cardSalvo, novoCard],
     }));
+  };
+
+  cardRemove = (event, index) => {
+    event.preventDefault();
+    const { cardSalvo } = this.state;
+    cardSalvo.splice(index, 1);
+
+    this.setState({
+      cardSalvo: cardSalvo.splice(index, 1),
+      hasTrunfo: cardSalvo.some(({ cardTrunfo }) => cardTrunfo === true),
+    });
   };
 
   render() {
@@ -112,10 +124,10 @@ class App extends React.Component {
             cardImage={ state.cardImage }
             cardRare={ state.cardRare }
             cardTrunfo={ state.cardTrunfo }
-            hasTrunfo={ state.hasTrunfo }
             onInputChange={ this.handleChange }
             isSaveButtonDisabled={ state.isSaveButtonDisabled }
-            onSaveButtonClick={ this.onSaveButtonClick }
+            onSaveButtonClick={ (event) => this.handleClick(event) }
+            hasTrunfo={ state.hasTrunfo }
           />
           <Card
             cardName={ state.cardName }
@@ -128,6 +140,31 @@ class App extends React.Component {
             cardTrunfo={ state.cardTrunfo }
           />
         </main>
+        <section>
+          {
+            state.cardSalvo
+              .map((card, index) => (
+                <div key={ index }>
+                  <Card
+                    cardName={ card.cardName }
+                    cardDescription={ card.cardDescription }
+                    cardAttr1={ card.cardAttr1 }
+                    cardAttr2={ card.cardAttr2 }
+                    cardAttr3={ card.cardAttr3 }
+                    cardImage={ card.cardImage }
+                    cardRare={ card.cardRare }
+                    cardTrunfo={ card.cardTrunfo }
+                  />
+                  <button
+                    data-testid="delete-button"
+                    onClick={ (event) => this.cardRemove(event, index) }
+                  >
+                    Excluir
+                  </button>
+                </div>
+              ))
+          }
+        </section>
       </>
     );
   }
