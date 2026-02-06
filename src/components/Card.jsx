@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 class Card extends Component {
   render() {
@@ -15,23 +15,61 @@ class Card extends Component {
     } = this.props;
 
     return (
-      <div className="card-container">
-        <h2 data-testid="name-card">{ cardName }</h2>
-        <img
-          src={ cardImage }
-          alt={ cardName }
-          data-testid="image-card"
-        />
-        <p data-testid="description-card">{ cardDescription }</p>
-        <p data-testid="attr1-card">{ cardAttr1 }</p>
-        <p data-testid="attr2-card">{ cardAttr2 }</p>
-        <p data-testid="attr3-card">{ cardAttr3 }</p>
-        <p data-testid="rare-card">{ cardRare }</p>
-        {
-          cardTrunfo && (
-            <p data-testid="trunfo-card">Super Trunfo</p>
-          )
-        }
+      <div className="nebula-card-outer">
+        <div className="nebula-card-inner">
+          <header className="card-header">
+            <h2 data-testid="name-card" className="card-name">
+              {cardName}
+            </h2>
+          </header>
+
+          <div className="card-image-container">
+            <img
+              src={cardImage}
+              alt={cardName}
+              data-testid="image-card"
+              className="card-image"
+            />
+            {cardTrunfo && (
+              <span data-testid="trunfo-card" className="trunfo-badge">
+                SUPER TRUNFO
+              </span>
+            )}
+          </div>
+
+          <div className="card-body">
+            <p data-testid="description-card" className="card-description">
+              {cardDescription}
+            </p>
+
+            <div className="card-stats">
+              <div className="stat-row">
+                <span>ATTR01</span>
+                <span data-testid="attr1-card" className="stat-value">
+                  {cardAttr1}
+                </span>
+              </div>
+              <div className="stat-row">
+                <span>ATTR02</span>
+                <span data-testid="attr2-card" className="stat-value">
+                  {cardAttr2}
+                </span>
+              </div>
+              <div className="stat-row">
+                <span>ATTR03</span>
+                <span data-testid="attr3-card" className="stat-value">
+                  {cardAttr3}
+                </span>
+              </div>
+            </div>
+
+            <footer className="card-footer">
+              <span data-testid="rare-card" className="rare-text">
+                {cardRare}
+              </span>
+            </footer>
+          </div>
+        </div>
       </div>
     );
   }
